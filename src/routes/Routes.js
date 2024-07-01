@@ -10,8 +10,8 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
-        <Route path="demos/*" element={<Demos />} /> {/* 注意这里的通配符 */}
-        <Route path="tutorials/*" element={<Tutorials />} /> {/* 注意这里的通配符 */}
+        <Route path="demos/*" element={<Demos />} />
+        <Route path="tutorials/*" element={<Tutorials />} />
       </Route>
     </Routes>
   );
