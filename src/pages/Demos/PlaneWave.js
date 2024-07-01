@@ -131,7 +131,7 @@ export default function PlaneWave() {
     });
     setLoading(true);
     try {
-      const response = await axios.post('electromagnetic-tutorial-service.zeabur.internal:8080/reflectionServlet', parameters, {
+      const response = await axios.post('https://electromagnetic-tutorial-service.zeabur.app/reflectionServlet', parameters, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
