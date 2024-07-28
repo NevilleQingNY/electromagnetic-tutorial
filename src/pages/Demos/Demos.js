@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Drawer, List, Divider, ListItem, ListItemButton, Tooltip, IconButton, Typography, AppBar, Toolbar } from '@mui/material';
-import { NavLink, Routes, Route, useParams } from 'react-router-dom';
+import { NavLink, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ListItemContent from '@mui/joy/ListItemContent'; // 确保安装了 @mui/joy
@@ -17,34 +17,58 @@ import ThreeDTutorial from './ThreeDTutorial';
 
 const drawerWidth = 260;
 
-const tutorialTitles = [
-  "Plane Wave Propagation",
-  "Reflection from a plane",
-  "Reflection from a slab",
-  "Oblique reflection from a plane",
-  "Two ray model",
-  "Geometrical Optics and UTD",
-  "Rayleigh and Rician fading",
-  "Knife-edge diffraction models for rural terrain",
-  "3D Tutorial"
-];
-
-const tutorialComponents = [
-  PlaneWave,
-  ReflectionPlane,
-  ReflectionSlab,
-  ObliqueReflectionPlane,
-  TwoRayModel,
-  GeometricalOptics,
-  RayleighRician,
-  KnifeEdgeDiffraction,
-  ThreeDTutorial,
+const tutorials = [
+  {
+    label: "Plane Wave Propagation",
+    route: "plane_wave_propagation",
+    component: <PlaneWave></PlaneWave>
+  },
+  {
+    label: "Reflection from a plane",
+    route: "cb_propagation",
+    component: <ReflectionPlane></ReflectionPlane>
+  },
+  {
+    label: "Reflection from a slab",
+    route: "reflection_from_slab",
+    component: <ReflectionSlab></ReflectionSlab>
+  },
+  {
+    label: "Oblique reflection from a plane",
+    route: "oblique_reflection",
+    component: <ObliqueReflectionPlane></ObliqueReflectionPlane>
+  },
+  {
+    label: "Two ray model",
+    route: "two_ray_model",
+    component: <TwoRayModel></TwoRayModel>
+  },
+  {
+    label: "Geometrical Optics and UTD",
+    route: "geometrical_optics_utd",
+    component: <GeometricalOptics></GeometricalOptics>
+  },
+  {
+    label: "Rayleigh and Rician fading",
+    route: "rayleigh_rician_fading",
+    component: <RayleighRician></RayleighRician>
+  },
+  {
+    label: "Knife-edge diffraction models for rural terrain",
+    route: "knife_edge_diffraction",
+    component: <KnifeEdgeDiffraction></KnifeEdgeDiffraction>
+  },
+  {
+    label: "3D Tutorial",
+    route: "3d_tutorial",
+    component: <ThreeDTutorial></ThreeDTutorial>
+  }
 ];
 
 const Demos = () => {
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const { id } = useParams();
-  const selectedTutorial = parseInt(id) || 0;
+  const currentRoute = useParams()['*'];
+  console.log(currentRoute);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -65,7 +89,8 @@ const Demos = () => {
             {drawerOpen ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
           <Typography variant="h6" noWrap>
-            {tutorialTitles[selectedTutorial]}
+            {/* {id} */}
+            {tutorials.find(item => item.route === currentRoute)?.label || 'Plane Wave Propagation'}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -93,12 +118,12 @@ const Demos = () => {
         >
           <Divider />
           <List>
-            {tutorialTitles.map((item, index) => (
-              <Tooltip key={index} title={item} placement="right">
+            {tutorials.map((item, index) => (
+              <Tooltip key={index} title={item.label} placement="right">
                 <ListItem disablePadding>
                   <ListItemButton
                     component={NavLink}
-                    to={`/demos/${index}`}
+                    to={`/demos/${item.route}`}
                     sx={{
                       '&.active': {
                         backgroundColor: 'primary.main',
@@ -111,7 +136,7 @@ const Demos = () => {
                   >
                     <ListItemContent>
                       <Typography noWrap>
-                        {item}
+                        {item.label}
                       </Typography>
                     </ListItemContent>
                   </ListItemButton>
@@ -132,10 +157,10 @@ const Demos = () => {
           }}
         >
           <Routes>
-            {tutorialComponents.map((Component, index) => (
-              <Route key={index} path={`${index}`} element={<Component />} />
+            {tutorials.map((Component, index) => (
+              <Route key={index} path={`${Component.route}`} element={Component.component} />
             ))}
-            <Route path="/" element={<PlaneWave />} />
+            <Route path="/" element={<Navigate to={tutorials[0].route} />} />
           </Routes>
         </Box>
       </Box>
